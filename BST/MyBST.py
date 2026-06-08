@@ -1,4 +1,5 @@
 from Node import Node
+from My_Queue import Queue
 
 class BSTree:
     def __init__(self):
@@ -56,3 +57,100 @@ class BSTree:
         self.post_order(p.left)
         self.post_order(p.right)
         self.visit(p)
+
+    def breadth(self):
+        if self.root == None:
+            return
+        
+        q = Queue()
+        q.enqueue(self.root)
+        while not q.isEmpty():
+            p = q.dequeue()
+
+            if p.left != None:
+                q.enqueue(p.left)
+            if p.right != None:
+                q.enqueue(p.right)
+
+            self.visit(p)
+
+    def search(self, x):
+        current = self.root
+
+        while current != None:
+            if x == current.info:
+                return current
+
+            if x > current.info:
+                current = current.right
+            else:
+                current = current.left
+
+        return None
+    
+    def searchNodeHavingOnlyLeftChildByPreOrder(self, p):
+        if p == None:
+            return None
+
+        # visit
+        if p.left != None and p.right == None:
+            return p
+
+        # left
+        found = self.searchNodeHavingOnlyLeftChildByPreOrder(p.left)
+        if found != None:
+            return found
+
+        # right
+        return self.searchNodeHavingOnlyLeftChildByPreOrder(p.right)
+    
+    def searchNodeHavingOnlyRightChildByPostOrder(self, p):
+        if p == None:
+            return None
+        
+        found = self.searchNodeHavingOnlyRightChildByPostOrder(p.left)
+        if found != None:
+            return found
+        
+        found = self.searchNodeHavingOnlyRightChildByPostOrder(p.right)
+        if found != None:
+            return found
+    
+        if p.left == None and p.right != None:
+            return p
+        
+        return None
+    
+    def searchBothChildrenByInOrder(self, p):
+        if p == None:
+            return None
+
+        found = self.searchBothChildrenByInOrder(p.left)
+        if found != None:
+            return found
+
+        if p.left != None and p.right != None:
+            return p
+
+        return self.searchBothChildrenByInOrder(p.right)
+    
+    def searchLeafByBreadth(self):
+        if self.root == None:
+            return None
+
+        q = Queue()
+        q.enqueue(self.root)
+
+        while not q.isEmpty():
+            p = q.dequeue()
+
+            if p.left == None and p.right == None:
+                return p
+
+            if p.left != None:
+                q.enqueue(p.left)
+
+            if p.right != None:
+                q.enqueue(p.right)
+
+        return None
