@@ -154,3 +154,77 @@ class BSTree:
                 q.enqueue(p.right)
 
         return None
+    
+    def delete(self, info):
+        current = self.root
+        parrent = None
+
+        while current != None and current.info != info:
+            parrent = current
+            if info < current.info:
+                current = current.left
+            if info > current.info:
+                current = current.right
+
+        if current == None:
+            return
+        
+        if current.left == None and current.right == None:
+            if self.root.info == info:
+                self.root = None
+                return
+            if info < parrent.info:
+                parrent.left = None
+            if info > parrent.info:
+                parrent.right = None
+
+            return
+        
+        # Xoa Node co duy nhat 1 con ben trai
+        if current.left != None and current.right == None:
+            if self.root.info == info:
+                self.root = current.left
+                return
+            if info < parrent.info:
+                parrent.left = current.left
+                current.left = None
+            if info > parrent.info:
+                parrent.right = current.left
+                current.left = None
+            
+            return
+
+        # Xoa Node co duy nhat 1 con ben phai
+        if current.left == None and current.right != None:
+            if self.root.info == info:
+                self.root = current.right
+                return
+            if info < parrent.info:
+                parrent.left = current.right
+                current.right = None
+            if info > parrent.info:
+                parrent.right = current.right
+                current.right = None
+            
+            return
+        
+        # Xoa Node co 2 con (delete by copying)
+        if current.left != None and current.right != None:
+            most_right = current.left
+            parrent_mostRight = None
+
+            while most_right.right != None:
+                parrent_mostRight = most_right
+                most_right = most_right.right
+            
+            current.info = most_right.info # Copy info cua most_right cho current
+            
+            if parrent_mostRight == None:
+                current.left = most_right.left
+            else:
+                parrent_mostRight.right = most_right.left
+
+            most_right.left = None
+
+    def delete_by_merging(self, info): # Khac delete by copying phan xoa node 2 con
+        pass
