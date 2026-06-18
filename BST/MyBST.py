@@ -157,10 +157,10 @@ class BSTree:
     
     def delete(self, info):
         current = self.root
-        parrent = None
+        parent = None
 
         while current != None and current.info != info:
-            parrent = current
+            parent = current
             if info < current.info:
                 current = current.left
             if info > current.info:
@@ -173,10 +173,10 @@ class BSTree:
             if self.root.info == info:
                 self.root = None
                 return
-            if info < parrent.info:
-                parrent.left = None
-            if info > parrent.info:
-                parrent.right = None
+            if info < parent.info:
+                parent.left = None
+            if info > parent.info:
+                parent.right = None
 
             return
         
@@ -185,11 +185,11 @@ class BSTree:
             if self.root.info == info:
                 self.root = current.left
                 return
-            if info < parrent.info:
-                parrent.left = current.left
+            if info < parent.info:
+                parent.left = current.left
                 current.left = None
-            if info > parrent.info:
-                parrent.right = current.left
+            if info > parent.info:
+                parent.right = current.left
                 current.left = None
             
             return
@@ -199,11 +199,11 @@ class BSTree:
             if self.root.info == info:
                 self.root = current.right
                 return
-            if info < parrent.info:
-                parrent.left = current.right
+            if info < parent.info:
+                parent.left = current.right
                 current.right = None
-            if info > parrent.info:
-                parrent.right = current.right
+            if info > parent.info:
+                parent.right = current.right
                 current.right = None
             
             return
@@ -211,20 +211,128 @@ class BSTree:
         # Xoa Node co 2 con (delete by copying)
         if current.left != None and current.right != None:
             most_right = current.left
-            parrent_mostRight = None
+            parent_mostRight = None
 
             while most_right.right != None:
-                parrent_mostRight = most_right
+                parent_mostRight = most_right
                 most_right = most_right.right
             
             current.info = most_right.info # Copy info cua most_right cho current
             
-            if parrent_mostRight == None:
+            if parent_mostRight == None:
                 current.left = most_right.left
             else:
-                parrent_mostRight.right = most_right.left
+                parent_mostRight.right = most_right.left
 
             most_right.left = None
 
-    def delete_by_merging(self, info): # Khac delete by copying phan xoa node 2 con
-        pass
+    def delete_by_merging(self, info):
+        current = self.root
+        parent = None
+
+        while current != None and current.info != info:
+            parent = current
+            if info < current.info:
+                current = current.left
+            if info > current.info:
+                current = current.right
+
+        if current == None:
+            return
+
+        # Xoa node la
+        if current.left == None and current.right == None:
+            if self.root.info == info:
+                self.root = None
+                return
+
+            if info < parent.info:
+                parent.left = None
+
+            if info > parent.info:
+                parent.right = None
+
+            return
+
+        # Xoa node chi co con trai
+        if current.left != None and current.right == None:
+            if self.root.info == info:
+                self.root = current.left
+                return
+
+            if info < parent.info:
+                parent.left = current.left
+                current.left = None
+
+            if info > parent.info:
+                parent.right = current.left
+                current.left = None
+
+            return
+
+        # Xoa node chi co con phai
+        if current.left == None and current.right != None:
+            if self.root.info == info:
+                self.root = current.right
+                return
+
+            if info < parent.info:
+                parent.left = current.right
+                current.right = None
+
+            if info > parent.info:
+                parent.right = current.right
+                current.right = None
+
+            return
+
+        # Xoa node co 2 con (delete by merging)
+        if current.left != None and current.right != None:
+            left_tree = current.left
+
+            # Tim node phai nhat cua cay con trai
+            most_right = left_tree
+            while most_right.right != None:
+                most_right = most_right.right
+
+            # Ghep cay con phai vao node phai nhat
+            most_right.right = current.right
+
+            # Neu current la root
+            if self.root == current:
+                self.root = left_tree
+                return
+
+            # Noi parent voi cay da merge
+            if info < parent.info:
+                parent.left = left_tree
+            else:
+                parent.right = left_tree
+
+    def rotate_right(self, info):
+        grand = None
+        parent = self.root
+
+        while parent != None and parent.info != info:
+            grand = parent
+            if info < parent.info:
+                parent = parent.left
+            if info > parent.info:
+                parent = parent.right
+
+        if parent == None or parent.left == None:
+            return
+        
+        left_child = parent.left
+        right_grand_child = left_child.right
+        
+        if grand == None:
+            self.root = left_child
+        else:
+            if parent.info > grand.info:
+                grand.right = left_child
+            if parent.info < grand.info:
+                grand.left = left_child
+
+        left_child.right = parent
+        parent.left = right_grand_child

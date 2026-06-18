@@ -48,4 +48,11 @@ if __name__ =="__main__":
     print()
     tree.insert(0)
     tree.delete(3)
+
+    tree.delete_by_merging(29)
+    tree.delete_by_merging(8)
+    tree.rotate_right(25)
+    tree.rotate_right(1)
     tree.breadth()
+
+    
