@@ -155,6 +155,27 @@ class BSTree:
 
         return None
     
+    def searchNodeByBreadth(self):
+        if self.root == None:
+            return None
+
+        q = Queue()
+        q.enqueue(self.root)
+
+        while not q.isEmpty():
+            p = q.dequeue()
+
+            if p.left != None:
+                return p
+
+            if p.left != None:
+                q.enqueue(p.left)
+
+            if p.right != None:
+                q.enqueue(p.right)
+
+        return None
+    
     def delete(self, info):
         current = self.root
         parent = None
