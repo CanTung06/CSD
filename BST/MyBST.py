@@ -357,3 +357,31 @@ class BSTree:
 
         left_child.right = parent
         parent.left = right_grand_child
+
+    def rotate_left(self, info):
+        grand = None
+        parent = self.root
+
+        while parent != None and parent.info != info:
+            grand = parent
+            if info < parent.info:
+                parent = parent.left
+            if info > parent.info:
+                parent = parent.right
+
+        if parent == None or parent.right == None:
+            return
+
+        right_child = parent.right
+        left_grand_child = right_child.left
+
+        if grand == None:
+            self.root = right_child
+        else:
+            if parent.info > grand.info:
+                grand.right = right_child
+            if parent.info < grand.info:
+                grand.left = right_child
+
+        right_child.left = parent
+        parent.right = left_grand_child

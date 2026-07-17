@@ -101,3 +101,71 @@ class Graph:
 
         print("Shortest path:", " -> ".join(path))
         print("Distance:", dist[end])
+
+    def degree(self, v):
+        deg = 0
+        for i in range(len(self.a)):
+            if self.a[v][i] != 0:
+                deg += 1
+        return deg
+    
+    def euler(self, start):
+        n = len(self.a)
+
+        # Copy ma trận
+        b = [row[:] for row in self.a]
+
+        st = Stack()
+        eu = []
+
+        st.push(start)
+
+        while not st.isEmpty():
+            r = st.top()
+
+            found = False
+            for i in range(n):
+                if b[r][i] > 0:
+                    st.push(i)
+                    b[r][i] = 0
+                    b[i][r] = 0
+                    found = True
+                    break
+
+            if not found:
+                eu.append(st.pop())
+
+        eu.reverse()
+
+        for x in eu:
+            self.visit(x)
+
+    def hamilton(self, start):
+        n = len(self.a)
+
+        visited = [False] * n
+        path = []
+
+        def Try(v):
+            path.append(v)
+            visited[v] = True
+
+            if len(path) == n:
+                if self.a[v][start] != 0:
+                    path.append(start)
+
+                    for x in path:
+                        self.visit(x)
+
+                    return True
+
+            for i in range(n):
+                if self.a[v][i] != 0 and not visited[i]:
+                    if Try(i):
+                        return True
+
+            visited[v] = False
+            path.pop()
+            return False
+
+        Try(start)
