@@ -5,7 +5,7 @@ class Main:
 
     def gen_data1(self):
         self.data = [
-            #[a, b, c, d, e, f, g, h, i]
+           #[a, b, c, d, e, f, g, h, i]
             [0, 0, 0, 0, 1, 1, 1, 0, 1],
             [0, 0, 0, 0, 0, 0, 1, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 1, 0],
